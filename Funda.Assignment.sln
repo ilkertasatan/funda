@@ -4,6 +4,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{7E931F03-9
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Funda.Assignment.UnitTests", "test\Funda.Assignment.UnitTests\Funda.Assignment.UnitTests.csproj", "{9C5CD2ED-9105-4C8C-9198-538E48F5BD14}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Funda.Assignment.Api", "src\Funda.Assignment.Api\Funda.Assignment.Api.csproj", "{28BA367F-A0A2-4774-A81B-82C756324B21}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{20BEA67B-E0B5-47F8-A3E2-B3C4DD46A1F3}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -11,11 +15,16 @@ Global
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{9C5CD2ED-9105-4C8C-9198-538E48F5BD14} = {7E931F03-9354-4AF2-BA76-7C50A16B300A}
+		{28BA367F-A0A2-4774-A81B-82C756324B21} = {20BEA67B-E0B5-47F8-A3E2-B3C4DD46A1F3}
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{9C5CD2ED-9105-4C8C-9198-538E48F5BD14}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{9C5CD2ED-9105-4C8C-9198-538E48F5BD14}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9C5CD2ED-9105-4C8C-9198-538E48F5BD14}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9C5CD2ED-9105-4C8C-9198-538E48F5BD14}.Release|Any CPU.Build.0 = Release|Any CPU
+		{28BA367F-A0A2-4774-A81B-82C756324B21}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{28BA367F-A0A2-4774-A81B-82C756324B21}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{28BA367F-A0A2-4774-A81B-82C756324B21}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{28BA367F-A0A2-4774-A81B-82C756324B21}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
