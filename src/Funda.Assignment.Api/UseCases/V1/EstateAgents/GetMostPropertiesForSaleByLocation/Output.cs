@@ -1,19 +1,19 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Funda.Assignment.Application.Common.Interfaces;
-using Funda.Assignment.Application.UseCases.EstateAgents.GetPropertiesByLocation;
+using Funda.Assignment.Application.UseCases.EstateAgents.GetMostPropertiesForSaleByLocation;
 using Funda.Assignment.Domain.EstateAgents;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Funda.Assignment.Api.UseCases.V1.EstateAgents.GetPropertiesByLocation
+namespace Funda.Assignment.Api.UseCases.V1.EstateAgents.GetMostPropertiesForSaleByLocation
 {
     public static class Output
     {
         public static IActionResult For(IQueryResult output) =>
             output switch
             {
-                GetPropertiesByLocationSuccessResult result => Ok(result.EstateAgents),
+                EstateAgentsWithMostPropertiesQueryResult result => Ok(result.EstateAgents),
                 _ => InternalServerError()
             };
 

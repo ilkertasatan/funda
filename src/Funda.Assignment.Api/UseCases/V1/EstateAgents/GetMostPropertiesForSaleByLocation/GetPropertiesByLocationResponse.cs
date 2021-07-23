@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
-namespace Funda.Assignment.Api.UseCases.V1.EstateAgents.GetPropertiesByLocation
+namespace Funda.Assignment.Api.UseCases.V1.EstateAgents.GetMostPropertiesForSaleByLocation
 {
     public class GetPropertiesByLocationResponse
     {

@@ -1,4 +1,4 @@
-﻿using Funda.Assignment.Application.UseCases.EstateAgents.GetPropertiesByLocation;
+﻿using Funda.Assignment.Application.UseCases.EstateAgents.GetMostPropertiesForSaleByLocation;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -8,7 +8,7 @@ namespace Funda.Assignment.Api.Extensions
     {
         public static IServiceCollection AddMediatR(this IServiceCollection services)
         {
-            services.AddMediatR(typeof(GetPropertiesByLocationQuery).Assembly);
+            services.AddMediatR(typeof(EstateAgentsWithMostPropertiesQuery).Assembly);
             
             return services;
         }

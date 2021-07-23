@@ -6,9 +6,10 @@ using Funda.Assignment.Domain;
 using Funda.Assignment.Domain.EstateAgents;
 using MediatR;
 
-namespace Funda.Assignment.Application.UseCases.EstateAgents.GetPropertiesByLocation
+namespace Funda.Assignment.Application.UseCases.EstateAgents.GetMostPropertiesForSaleByLocation
 {
-    public class GetPropertiesByLocationQueryHandler : IRequestHandler<GetPropertiesByLocationQuery, IQueryResult>
+    public class EstateAgentsWithMostPropertiesQueryHandler :
+        IRequestHandler<EstateAgentsWithMostPropertiesQuery, IQueryResult>
     {
         private const int DefaultPage = 1;
         private const int DefaultPageSize = 25;
@@ -16,13 +17,13 @@ namespace Funda.Assignment.Application.UseCases.EstateAgents.GetPropertiesByLoca
         
         private readonly ISearchProperties _fundaPartnerApi;
         
-        public GetPropertiesByLocationQueryHandler(ISearchProperties fundaPartnerApi)
+        public EstateAgentsWithMostPropertiesQueryHandler(ISearchProperties fundaPartnerApi)
         {
             _fundaPartnerApi = fundaPartnerApi;
         }
         
         public async Task<IQueryResult> Handle(
-            GetPropertiesByLocationQuery request,
+            EstateAgentsWithMostPropertiesQuery request,
             CancellationToken cancellationToken)
         {
             var result = (await _fundaPartnerApi.SearchAsync(
@@ -38,7 +39,7 @@ namespace Funda.Assignment.Application.UseCases.EstateAgents.GetPropertiesByLoca
                 .Take(DefaultLimit)
                 .ToList();
 
-            return new GetPropertiesByLocationSuccessResult(result);
+            return new EstateAgentsWithMostPropertiesQueryResult(result);
         }
     }
 }

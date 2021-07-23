@@ -1,11 +1,11 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
-using Funda.Assignment.Application.UseCases.EstateAgents.GetPropertiesByLocation;
+using Funda.Assignment.Application.UseCases.EstateAgents.GetMostPropertiesForSaleByLocation;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Funda.Assignment.Api.UseCases.V1.EstateAgents.GetPropertiesByLocation
+namespace Funda.Assignment.Api.UseCases.V1.EstateAgents.GetMostPropertiesForSaleByLocation
 {
     [ApiController]
     [ApiConventionType(typeof(DefaultApiConventions))]
@@ -23,13 +23,9 @@ namespace Funda.Assignment.Api.UseCases.V1.EstateAgents.GetPropertiesByLocation
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [HttpGet("{location}/properties", Name = "Location")]
-        public async Task<IActionResult> GetPropertiesByLocation(
-            [FromRoute] [Required] string location,
-            [FromQuery] int offset = 1,
-            [FromQuery] int limit = 10)
+        public async Task<IActionResult> GetEstateAgentsWithMostPropertiesForSaleByLocation([FromRoute] [Required] string location)
         {
-            var result = await _mediator.Send(new GetPropertiesByLocationQuery(location, offset, limit));
-            return Output.For(result);
+            return Output.For(await _mediator.Send(new EstateAgentsWithMostPropertiesQuery(location)));
         }
     }
 }
