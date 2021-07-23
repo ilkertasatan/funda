@@ -22,7 +22,9 @@ namespace Funda.Assignment.Api
                 .AddApiControllers()
                 .AddVersioning()
                 .AddSwagger()
-                .AddFundaPartnerApi(Configuration);
+                .AddMediatR()
+                .AddFundaPartnerApi(Configuration)
+                .AddUseCases();
         }
         
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
