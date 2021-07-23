@@ -13,11 +13,11 @@ namespace Funda.Assignment.Infrastructure.PropertyServices.FundaPartnerApi
                 response.IsVerhuurd,
                 response.IsVerkocht,
                 response.IsVerkochtOfVerhuurd,
-                new PropertyPrice(response.KoopprijsTot),
-                new PropertyLocation(response.Adres, response.Postcode),
+                new Price(response.KoopprijsTot),
+                new Location(response.Adres),
                 EstateAgent.New(
                     new EstateAgentId(response.MakelaarId),
-                    new EstateAgentName(response.MakelaarNaam)));
+                    new Name(response.MakelaarNaam)));
         }
     }
 }
