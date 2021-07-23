@@ -1,4 +1,4 @@
 namespace Funda.Assignment.Domain.ValueObjects
 {
-    public record PropertyPrice(decimal Price);
+    public record PropertyPrice(int Price);
 }

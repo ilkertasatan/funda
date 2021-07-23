@@ -2,7 +2,7 @@
 
 namespace Funda.Assignment.Domain.EstateAgents
 {
-    public class EstateAgent
+    public class EstateAgent : Entity<EstateAgentId>
     {
         private EstateAgent() { }
 
@@ -10,14 +10,12 @@ namespace Funda.Assignment.Domain.EstateAgents
             EstateAgentId estateAgentId,
             EstateAgentName name)
         {
-            EstateAgentId = estateAgentId;
+            Id = estateAgentId;
             Name = name;
         }
-
-        public EstateAgentId EstateAgentId { get; }
+        
         public EstateAgentName Name { get; }
-
-
+        
         public static EstateAgent New(
             EstateAgentId estateAgentId,
             EstateAgentName name)
