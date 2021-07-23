@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 using Flurl;
 using Flurl.Http;
 using Funda.Assignment.Domain;
+using Polly;
 
 namespace Funda.Assignment.Infrastructure.PropertyServices.FundaPartnerApi
 {
@@ -32,26 +34,45 @@ namespace Funda.Assignment.Infrastructure.PropertyServices.FundaPartnerApi
         {
             //"http://partnerapi.funda.nl/feeds/Aanbod.svc/json/ac1b0b1572524640a0ecc54de453ea9f/?type=koop&zo=/amsterdam/tuin/&page=1&pagesize=25";
 
-            var property = await _fundaPartnerApiUri
-                .SetQueryParams(new
-                {
-                    type = type switch
+            var property = await Policy
+                .Handle<FlurlHttpException>(NeedsToBeRetried)
+                .WaitAndRetryAsync(3, retryAttempt => TimeSpan.FromSeconds(Math.Pow(2, retryAttempt)))
+                .ExecuteAsync(async () => await _fundaPartnerApiUri
+                    .SetQueryParams(new
                     {
-                        SearchType.Purchase => "koop",
-                        _ => throw new ArgumentOutOfRangeException(nameof(type), type, null)
-                    },
-                    zo = includeGarden switch
-                    {
-                        true => $"/{location}/tuin/",
-                        false => $"/{location}/"
-                    },
-                    page = page,
-                    pagesize = pageSize
-                })
-                .WithTimeout(TimeSpan.FromSeconds(3))
-                .GetJsonAsync<AanbodServiceResponse>(cancellationToken);
+                        type = type switch
+                        {
+                            SearchType.Purchase => "koop",
+                            _ => throw new ArgumentOutOfRangeException(nameof(type), type, null)
+                        },
+                        zo = includeGarden switch
+                        {
+                            true => $"/{location}/tuin/",
+                            false => $"/{location}/"
+                        },
+                        page = page,
+                        pagesize = pageSize
+                    })
+                    .WithTimeout(TimeSpan.FromSeconds(3))
+                    .GetJsonAsync<AanbodServiceResponse>(cancellationToken));
 
             return property.Objects.Select(@object => _translator.Translate(@object)).ToList();
+        }
+
+        private static bool NeedsToBeRetried(FlurlHttpException ex)
+        {
+            switch ((HttpStatusCode) ex.Call.Response.StatusCode)
+            {
+                case HttpStatusCode.Unauthorized:
+                case HttpStatusCode.RequestTimeout:
+                case HttpStatusCode.InternalServerError:
+                case HttpStatusCode.BadGateway:
+                case HttpStatusCode.GatewayTimeout:
+                case HttpStatusCode.TooManyRequests:
+                    return true;
+                default:
+                    return false;
+            }
         }
     }
 }
