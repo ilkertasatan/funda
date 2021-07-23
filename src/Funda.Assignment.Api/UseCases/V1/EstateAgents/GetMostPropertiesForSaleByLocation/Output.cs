@@ -20,7 +20,7 @@ namespace Funda.Assignment.Api.UseCases.V1.EstateAgents.GetMostPropertiesForSale
         private static IActionResult Ok(IEnumerable<EstateAgent> estateAgents)
         {
             return new OkObjectResult(estateAgents
-                .Select(estateAgent => new GetPropertiesByLocationResponse
+                .Select(estateAgent => new GetMostPropertiesByLocationResponse
                 {
                     EstateAgentId = estateAgent.Id.Value(),
                     EstateAgentName = estateAgent.Name.ToString(),

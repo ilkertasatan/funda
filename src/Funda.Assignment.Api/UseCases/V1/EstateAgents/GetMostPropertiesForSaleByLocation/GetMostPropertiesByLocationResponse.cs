@@ -3,7 +3,7 @@ using System.Text.Json.Serialization;
 
 namespace Funda.Assignment.Api.UseCases.V1.EstateAgents.GetMostPropertiesForSaleByLocation
 {
-    public class GetPropertiesByLocationResponse
+    public class GetMostPropertiesByLocationResponse
     {
         [JsonPropertyName("makelaar_id")]
         public int EstateAgentId { get; set; }
