@@ -1,16 +1,17 @@
 ﻿using System.Collections.Generic;
 using Funda.Assignment.Application.Common.Interfaces;
 using Funda.Assignment.Domain;
+using Funda.Assignment.Domain.EstateAgents;
 
 namespace Funda.Assignment.Application.UseCases.EstateAgents.GetPropertiesByLocation
 {
     public class GetPropertiesByLocationSuccessResult : IQueryResult
     {
-        public GetPropertiesByLocationSuccessResult(IList<Property> properties)
+        public GetPropertiesByLocationSuccessResult(IList<EstateAgent> estateAgents)
         {
-            Properties = properties;
+            EstateAgents = estateAgents;
         }
 
-        public IList<Property> Properties { get; }
+        public IList<EstateAgent> EstateAgents { get; }
     }
 }

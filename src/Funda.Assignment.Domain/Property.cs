@@ -54,6 +54,6 @@ namespace Funda.Assignment.Domain
 
         public bool IsSold() => Sold;
         public bool IsRented() => Rented;
-        public bool IsRentedOrSold => RentedOrSold;
+        public bool IsRentedOrSold() => RentedOrSold;
     }
 }
