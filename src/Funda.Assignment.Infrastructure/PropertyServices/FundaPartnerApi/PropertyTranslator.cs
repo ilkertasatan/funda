@@ -4,9 +4,9 @@ using Funda.Assignment.Domain.ValueObjects;
 
 namespace Funda.Assignment.Infrastructure.PropertyServices.FundaPartnerApi
 {
-    public class PropertyTranslator : ITranslateProperty<AanbodServiceResponse>
+    public class PropertyTranslator : ITranslateProperty<AanbodServiceResponse.Object>
     {
-        public Property Translate(AanbodServiceResponse response)
+        public Property Translate(AanbodServiceResponse.Object response)
         {
             return Property.New(
                 new PropertyId(response.GlobalId),

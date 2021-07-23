@@ -16,7 +16,7 @@ namespace Funda.Assignment.Api.Extensions
             {
                 var apiKey = configuration["PropertyServices:FundaPartnerApi:ApiKey"];
                 var uri = new Uri(configuration["PropertyServices:FundaPartnerApi:ApiUrl"]);
-                var translator = provider.GetRequiredService<ITranslateProperty<AanbodServiceResponse>>();
+                var translator = provider.GetRequiredService<ITranslateProperty<AanbodServiceResponse.Object>>();
 
                 return new AanbodService(new Uri(uri, apiKey), translator);
             });
