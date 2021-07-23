@@ -21,7 +21,8 @@ namespace Funda.Assignment.Api
             services
                 .AddApiControllers()
                 .AddVersioning()
-                .AddSwagger();
+                .AddSwagger()
+                .AddFundaPartnerApi(Configuration);
         }
         
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
