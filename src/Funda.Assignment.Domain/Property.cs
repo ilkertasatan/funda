@@ -5,51 +5,55 @@ namespace Funda.Assignment.Domain
 {
     public class Property : Entity<PropertyId>
     {
+        public static readonly Property Empty = new Property();
         private Property() { }
 
         private Property(
             PropertyId propertyId,
-            bool isRented,
-            bool isSold,
-            bool isRentedOrSold,
-            PropertyPrice price,
-            PropertyLocation location,
+            bool rented,
+            bool sold,
+            bool rentedOrSold,
+            Price price,
+            Location location,
             EstateAgent estateAgent)
         {
             Id = propertyId;
-            IsRented = isRented;
-            IsSold = isSold;
-            IsRentedOrSold = isRentedOrSold;
+            Rented = rented;
+            Sold = sold;
+            RentedOrSold = rentedOrSold;
             Location = location;
             Price = price;
             EstateAgent = estateAgent;
         }
         
-        public bool IsRented { get; }
-        public bool IsSold { get; }
-        public bool IsRentedOrSold { get; }
-        public PropertyLocation Location { get; }
-        public PropertyPrice Price { get; }
+        public bool Rented { get; }
+        public bool Sold { get; }
+        public bool RentedOrSold { get; }
+        public Location Location { get; }
+        public Price Price { get; }
         public EstateAgent EstateAgent { get; }
         
-
         public static Property New(
             PropertyId propertyId,
-            bool isRented,
-            bool isSold,
-            bool isRentedOrSold,
-            PropertyPrice price,
-            PropertyLocation location,
+            bool rented,
+            bool sold,
+            bool rentedOrSold,
+            Price price,
+            Location location,
             EstateAgent estateAgent)
         {
             return new(
                 propertyId,
-                isRented,
-                isSold,
-                isRentedOrSold,
+                rented,
+                sold,
+                rentedOrSold,
                 price,
                 location,
                 estateAgent);
         }
+
+        public bool IsSold() => Sold;
+        public bool IsRented() => Rented;
+        public bool IsRentedOrSold => RentedOrSold;
     }
 }

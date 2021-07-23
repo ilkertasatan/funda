@@ -8,17 +8,17 @@ namespace Funda.Assignment.Domain.EstateAgents
 
         private EstateAgent(
             EstateAgentId estateAgentId,
-            EstateAgentName name)
+            Name name)
         {
             Id = estateAgentId;
             Name = name;
         }
         
-        public EstateAgentName Name { get; }
+        public Name Name { get; }
         
         public static EstateAgent New(
             EstateAgentId estateAgentId,
-            EstateAgentName name)
+            Name name)
         {
             return new(estateAgentId, name);
         }

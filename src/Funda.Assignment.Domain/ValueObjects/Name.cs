@@ -1,10 +1,10 @@
 ﻿namespace Funda.Assignment.Domain.ValueObjects
 {
-    public record EstateAgentName(string Name)
+    public record Name(string Value)
     {
         public override string ToString()
         {
-            return Name;
+            return Value;
         }
     }
 }
