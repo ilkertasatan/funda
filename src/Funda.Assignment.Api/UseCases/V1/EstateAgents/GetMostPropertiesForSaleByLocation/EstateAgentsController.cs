@@ -22,10 +22,12 @@ namespace Funda.Assignment.Api.UseCases.V1.EstateAgents.GetMostPropertiesForSale
         [ProducesDefaultResponseType]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        [HttpGet("{location}/properties", Name = "Location")]
-        public async Task<IActionResult> GetEstateAgentsWithMostPropertiesForSaleByLocation([FromRoute] [Required] string location)
+        [HttpGet("{location}/most-properties-for-sale")]
+        public async Task<IActionResult> GetEstateAgentsWithMostPropertiesForSaleByLocation(
+            [FromRoute] [Required] string location,
+            [FromQuery] bool includeGarden)
         {
-            return Output.For(await _mediator.Send(new EstateAgentsWithMostPropertiesQuery(location)));
+            return Output.For(await _mediator.Send(new EstateAgentsWithMostPropertiesQuery(location, includeGarden)));
         }
     }
 }

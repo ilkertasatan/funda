@@ -24,10 +24,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="UseCases\V1" />
-    </ItemGroup>
-
-    <ItemGroup>
       <ProjectReference Include="..\Funda.Assignment.Domain\Funda.Assignment.Domain.csproj" />
       <ProjectReference Include="..\Funda.Assignment.Infrastructure\Funda.Assignment.Infrastructure.csproj" />
     </ItemGroup>

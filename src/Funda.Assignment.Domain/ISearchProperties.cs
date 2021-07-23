@@ -9,7 +9,7 @@ namespace Funda.Assignment.Domain
         Task<IList<Property>> SearchAsync(
             SearchType type,
             string location,
-            bool withGarden, 
+            bool includeGarden, 
             int page,
             int pageSize,
             CancellationToken cancellationToken);

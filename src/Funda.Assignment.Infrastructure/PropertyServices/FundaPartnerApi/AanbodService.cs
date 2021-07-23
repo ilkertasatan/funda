@@ -25,7 +25,7 @@ namespace Funda.Assignment.Infrastructure.PropertyServices.FundaPartnerApi
         public async Task<IList<Property>> SearchAsync(
             SearchType type,
             string location,
-            bool withGarden,
+            bool includeGarden,
             int page,
             int pageSize,
             CancellationToken cancellationToken)
@@ -40,7 +40,11 @@ namespace Funda.Assignment.Infrastructure.PropertyServices.FundaPartnerApi
                         SearchType.Purchase => "koop",
                         _ => throw new ArgumentOutOfRangeException(nameof(type), type, null)
                     },
-                    zo = $"/{location}",
+                    zo = includeGarden switch
+                    {
+                        true => $"/{location}/tuin/",
+                        false => $"/{location}/"
+                    },
                     page = page,
                     pagesize = pageSize
                 })

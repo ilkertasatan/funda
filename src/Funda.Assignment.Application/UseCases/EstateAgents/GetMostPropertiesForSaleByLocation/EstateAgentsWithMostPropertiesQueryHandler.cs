@@ -29,7 +29,7 @@ namespace Funda.Assignment.Application.UseCases.EstateAgents.GetMostPropertiesFo
             var result = (await _fundaPartnerApi.SearchAsync(
                     type: SearchType.Purchase,
                     location: request.Location.Value,
-                    withGarden: false,
+                    includeGarden: request.IncludeGarden,
                     page: DefaultPage,
                     pageSize: DefaultPageSize,
                     cancellationToken))

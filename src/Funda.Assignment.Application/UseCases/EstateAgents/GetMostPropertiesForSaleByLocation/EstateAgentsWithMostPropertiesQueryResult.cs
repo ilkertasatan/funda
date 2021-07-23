@@ -6,11 +6,11 @@ namespace Funda.Assignment.Application.UseCases.EstateAgents.GetMostPropertiesFo
 {
     public class EstateAgentsWithMostPropertiesQueryResult : IQueryResult
     {
-        public EstateAgentsWithMostPropertiesQueryResult(IList<EstateAgent> estateAgents)
+        public EstateAgentsWithMostPropertiesQueryResult(IEnumerable<EstateAgent> estateAgents)
         {
             EstateAgents = estateAgents;
         }
 
-        public IList<EstateAgent> EstateAgents { get; }
+        public IEnumerable<EstateAgent> EstateAgents { get; }
     }
 }
