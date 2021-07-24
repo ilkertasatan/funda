@@ -38,6 +38,7 @@ namespace Funda.Assignment.Api
 
             app.UseRouting();
             app.UseAuthorization();
+            app.ConfigureExceptionHandler();
             app.UseSwaggerDocumentation();
 
             app.UseEndpoints(endpoints =>
