@@ -5,6 +5,7 @@ namespace Funda.Assignment.Infrastructure.PropertyServices.FundaPartnerApi
     public class AanbodServiceResponse
     {
         public IList<ObjectResponse> Objects { get; set; }
+        public PagingResponse Paging { get; set; }
 
         public class ObjectResponse
         {
@@ -25,6 +26,11 @@ namespace Funda.Assignment.Infrastructure.PropertyServices.FundaPartnerApi
             public int MakelaarId { get; set; }
 
             public string MakelaarNaam { get; set; }
+        }
+        
+        public class PagingResponse
+        {
+            public int AantalPaginas { get; set; }
         }
     }
 }

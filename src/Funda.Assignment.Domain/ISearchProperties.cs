@@ -14,6 +14,6 @@ namespace Funda.Assignment.Domain
 
     public interface ICheckPropertyServiceIsHealthy
     {
-        Task Ping();
+        Task PingAsync();
     }
 }

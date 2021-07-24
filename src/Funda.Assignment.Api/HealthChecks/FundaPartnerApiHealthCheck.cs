@@ -21,7 +21,7 @@ namespace Funda.Assignment.Api.HealthChecks
         {
             try
             {
-                await _fundaPartnerApi.Ping();
+                await _fundaPartnerApi.PingAsync();
                 
                 return HealthCheckResult.Healthy();
             }

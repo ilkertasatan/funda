@@ -16,9 +16,9 @@ namespace Funda.Assignment.Infrastructure.PropertyServices.FundaPartnerApi
         ISearchProperties,
         ICheckPropertyServiceIsHealthy
     {
-        private const int MaxRetryCount = 3;
+        private const int MaxRetryCount = 5;
         private const string DefaultSearchType = "koop"; //purchase
-        private const int DefaultPageSize = 50;
+        private const int DefaultPageSize = 100;
         
         private readonly Uri _fundaPartnerApiUri;
         private readonly ITranslateProperty<AanbodServiceResponse.ObjectResponse> _translator;
@@ -41,48 +41,80 @@ namespace Funda.Assignment.Infrastructure.PropertyServices.FundaPartnerApi
                 .WaitAndRetryAsync(MaxRetryCount, retryAttempt => TimeSpan.FromSeconds(Math.Pow(2, retryAttempt)))
                 .ExecuteAsync(async () =>
                 {
-                    AanbodServiceResponse response;
+                    var response = await CallAanbodService(
+                        location,
+                        includeGarden,
+                        pageIndex: 0,
+                        pageSize: DefaultPageSize,
+                        cancellationToken);
+                    var pageCount = response.Paging.AantalPaginas;
+                    
+                    var allTasks = new List<Task<IEnumerable<AanbodServiceResponse.ObjectResponse>>>();
+                    for (var pageIndex = 1; pageIndex < pageCount; pageIndex++)
+                        allTasks.Add(AcquireObjectsAsync(
+                            location,
+                            includeGarden,
+                            pageIndex,
+                            cancellationToken));
+
+                    var allResults = await Task.WhenAll(allTasks);
+
                     var objects = new List<AanbodServiceResponse.ObjectResponse>();
-
-                    var pageIndex = 0;
-                    do
-                    {
-                       response = await _fundaPartnerApiUri
-                            .SetQueryParams(new
-                            {
-                                type = DefaultSearchType,
-                                zo = includeGarden switch
-                                {
-                                    true => $"/{location}/tuin/",
-                                    false => $"/{location}/"
-                                },
-                                page = pageIndex += 1,
-                                pagesize = DefaultPageSize
-                            })
-                            .WithTimeout(TimeSpan.FromSeconds(3))
-                            .GetJsonAsync<AanbodServiceResponse>(cancellationToken);
-
-                       objects.AddRange(response.Objects);
-
-                    } while (response.Objects is {Count: > 0});
-
+                    objects.AddRange(allResults.SelectMany(task => task));
+                    
                     return objects;
                 });
 
             return properties.Select(property => _translator.Translate(property));
         }
 
-        public async Task Ping()
+        public async Task PingAsync()
         {
-            await _fundaPartnerApiUri
+            await CallAanbodService(
+                DefaultSearchType,
+                includeGarden: false,
+                pageIndex: 0,
+                pageSize: 1,
+                CancellationToken.None);
+        }
+
+        private async Task<IEnumerable<AanbodServiceResponse.ObjectResponse>> AcquireObjectsAsync(
+            string location,
+            bool includeGarden,
+            int pageIndex,
+            CancellationToken cancellationToken)
+        {
+            var response = await CallAanbodService(
+                location,
+                includeGarden,
+                pageIndex,
+                DefaultPageSize,
+                cancellationToken);
+            return response.Objects;
+        }
+
+        private async Task<AanbodServiceResponse> CallAanbodService(
+            string location,
+            bool includeGarden,
+            int pageIndex,
+            int pageSize,
+            CancellationToken cancellationToken)
+        {
+            return await _fundaPartnerApiUri
                 .SetQueryParams(new
                 {
                     type = DefaultSearchType,
-                    zo = "/amsterdam/",
-                    page = 0,
-                    pagesize = 1
+                    zo = includeGarden switch
+                    {
+                        true => $"/{location}/tuin/",
+                        false => $"/{location}/"
+                    },
+                    page = pageIndex,
+                    pagesize = pageSize
                 })
-                .GetJsonAsync<AanbodServiceResponse>();
+                .WithTimeout(TimeSpan.FromSeconds(3))
+                .GetJsonAsync<AanbodServiceResponse>(cancellationToken)
+                .ConfigureAwait(false);
         }
 
         private static bool NeedsToBeRetried(FlurlHttpException ex)
