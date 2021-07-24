@@ -8,7 +8,7 @@ namespace Funda.Assignment.Api.Extensions
     {
         public static IServiceCollection AddUseCases(this IServiceCollection services)
         {
-            services.AddScoped<ITranslateProperty<AanbodServiceResponse.Object>, PropertyTranslator>();
+            services.AddScoped<ITranslateProperty<AanbodServiceResponse.ObjectResponse>, PropertyTranslator>();
             
              return services;
         }
