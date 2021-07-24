@@ -11,8 +11,8 @@ namespace Funda.Assignment.Application.UseCases.EstateAgents.GetMostPropertiesFo
     public class EstateAgentsWithMostPropertiesQueryHandler :
         IRequestHandler<EstateAgentsWithMostPropertiesQuery, IQueryResult>
     {
-        private const int DefaultPage = 1;
-        private const int DefaultPageSize = 25;
+        private const int DefaultPage = 0;
+        private const int DefaultPageSize = 50;
         private const int DefaultLimit = 10;
         
         private readonly ISearchProperties _fundaPartnerApi;
