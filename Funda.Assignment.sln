@@ -14,6 +14,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Funda.Assignment.Infrastruc
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Funda.Assignment.Domain", "src\Funda.Assignment.Domain\Funda.Assignment.Domain.csproj", "{D6E9ED48-BFBC-41C4-BBBC-C1E09462FAF2}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Funda.Assignment.IntegrationTests", "test\Funda.Assignment.IntegrationTests\Funda.Assignment.IntegrationTests.csproj", "{C0128D99-BACC-476E-A59B-EE86E46C135A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -25,6 +27,7 @@ Global
 		{EDD88662-AF02-4E19-B8C6-D49768881BF0} = {20BEA67B-E0B5-47F8-A3E2-B3C4DD46A1F3}
 		{07AB112A-3BAC-4174-AF5A-A34DE85A2F19} = {20BEA67B-E0B5-47F8-A3E2-B3C4DD46A1F3}
 		{D6E9ED48-BFBC-41C4-BBBC-C1E09462FAF2} = {20BEA67B-E0B5-47F8-A3E2-B3C4DD46A1F3}
+		{C0128D99-BACC-476E-A59B-EE86E46C135A} = {7E931F03-9354-4AF2-BA76-7C50A16B300A}
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{9C5CD2ED-9105-4C8C-9198-538E48F5BD14}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -47,5 +50,9 @@ Global
 		{D6E9ED48-BFBC-41C4-BBBC-C1E09462FAF2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D6E9ED48-BFBC-41C4-BBBC-C1E09462FAF2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D6E9ED48-BFBC-41C4-BBBC-C1E09462FAF2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C0128D99-BACC-476E-A59B-EE86E46C135A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C0128D99-BACC-476E-A59B-EE86E46C135A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C0128D99-BACC-476E-A59B-EE86E46C135A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C0128D99-BACC-476E-A59B-EE86E46C135A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
