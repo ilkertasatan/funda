@@ -13,12 +13,14 @@ namespace Funda.Assignment.Infrastructure.PropertyServices.FundaPartnerApi
 {
     public class AanbodService : ISearchProperties
     {
+        private const int MaxRetryCount = 3;
+        
         private readonly Uri _fundaPartnerApiUri;
-        private readonly ITranslateProperty<AanbodServiceResponse.Object> _translator;
+        private readonly ITranslateProperty<AanbodServiceResponse.ObjectResponse> _translator;
 
         public AanbodService(
             Uri fundaPartnerApiUri,
-            ITranslateProperty<AanbodServiceResponse.Object> translator)
+            ITranslateProperty<AanbodServiceResponse.ObjectResponse> translator)
         {
             _fundaPartnerApiUri = fundaPartnerApiUri;
             _translator = translator;
@@ -32,31 +34,43 @@ namespace Funda.Assignment.Infrastructure.PropertyServices.FundaPartnerApi
             int pageSize,
             CancellationToken cancellationToken)
         {
-            //"http://partnerapi.funda.nl/feeds/Aanbod.svc/json/ac1b0b1572524640a0ecc54de453ea9f/?type=koop&zo=/amsterdam/tuin/&page=1&pagesize=25";
-
-            var property = await Policy
+            var properties = await Policy
                 .Handle<FlurlHttpException>(NeedsToBeRetried)
-                .WaitAndRetryAsync(3, retryAttempt => TimeSpan.FromSeconds(Math.Pow(2, retryAttempt)))
-                .ExecuteAsync(async () => await _fundaPartnerApiUri
-                    .SetQueryParams(new
-                    {
-                        type = type switch
-                        {
-                            SearchType.Purchase => "koop",
-                            _ => throw new ArgumentOutOfRangeException(nameof(type), type, null)
-                        },
-                        zo = includeGarden switch
-                        {
-                            true => $"/{location}/tuin/",
-                            false => $"/{location}/"
-                        },
-                        page = page,
-                        pagesize = pageSize
-                    })
-                    .WithTimeout(TimeSpan.FromSeconds(3))
-                    .GetJsonAsync<AanbodServiceResponse>(cancellationToken));
+                .WaitAndRetryAsync(MaxRetryCount, retryAttempt => TimeSpan.FromSeconds(Math.Pow(2, retryAttempt)))
+                .ExecuteAsync(async () =>
+                {
+                    AanbodServiceResponse response;
+                    var objects = new List<AanbodServiceResponse.ObjectResponse>();
 
-            return property.Objects.Select(@object => _translator.Translate(@object)).ToList();
+                    do
+                    {
+                       response = await _fundaPartnerApiUri
+                            .SetQueryParams(new
+                            {
+                                type = type switch
+                                {
+                                    SearchType.Purchase => "koop",
+                                    _ => "koop"
+                                },
+                                zo = includeGarden switch
+                                {
+                                    true => $"/{location}/tuin/",
+                                    false => $"/{location}/"
+                                },
+                                page = page += 1,
+                                pagesize = pageSize
+                            })
+                            .WithTimeout(TimeSpan.FromSeconds(3))
+                            .GetJsonAsync<AanbodServiceResponse>(cancellationToken);
+
+                       objects.AddRange(response.Objects);
+
+                    } while (response.Objects is {Count: > 0});
+
+                    return objects;
+                });
+
+            return properties.Select(@object => _translator.Translate(@object)).ToList();
         }
 
         private static bool NeedsToBeRetried(FlurlHttpException ex)
