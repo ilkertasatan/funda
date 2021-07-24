@@ -28,7 +28,8 @@ namespace Funda.Assignment.Infrastructure.PropertyServices.FundaPartnerApi
             _translator = translator;
         }
 
-        public async Task<IEnumerable<Property>> SearchAsync(string location,
+        public async Task<IEnumerable<Property>> SearchAsync(
+            string location,
             bool includeGarden,
             CancellationToken cancellationToken)
         {
