@@ -12,14 +12,12 @@ namespace Funda.Assignment.Api.Extensions
             this IServiceCollection services,
             IConfiguration configuration)
         {
-            services.AddScoped<ISearchProperties>(provider =>
-            {
-                var apiKey = configuration["PropertyServices:FundaPartnerApi:ApiKey"];
-                var uri = new Uri(configuration["PropertyServices:FundaPartnerApi:ApiUrl"]);
-                var translator = provider.GetRequiredService<ITranslateProperty<AanbodServiceResponse.ObjectResponse>>();
+            services.AddScoped<ISearchProperties, AanbodService>();
+            services.AddScoped<ICheckPropertyServiceIsHealthy, AanbodService>();
 
-                return new AanbodService(new Uri(uri, apiKey), translator);
-            });
+            services.Configure<FundaPartnerApiSettings>(options => 
+                configuration.GetSection("PropertyServices:FundaPartnerApi").Bind(options));
+            
             return services;
         }
     }

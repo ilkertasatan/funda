@@ -1,5 +1,8 @@
 using Funda.Assignment.Api.Extensions;
+using Funda.Assignment.Infrastructure.PropertyServices.FundaPartnerApi;
+using HealthChecks.UI.Client;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -21,6 +24,7 @@ namespace Funda.Assignment.Api
             services
                 .AddApiControllers()
                 .AddVersioning()
+                .AddApiHealthChecks()
                 .AddSwagger()
                 .AddMediatR()
                 .AddFundaPartnerApi(Configuration)
@@ -36,7 +40,21 @@ namespace Funda.Assignment.Api
             app.UseAuthorization();
             app.UseSwaggerDocumentation();
 
-            app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapHealthChecks("/healthz/ready", new HealthCheckOptions
+                {
+                    Predicate = check => !check.Name.Contains("Liveness"),
+                    ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
+                });
+                endpoints.MapHealthChecks("/healthz/live", new HealthCheckOptions
+                {
+                    Predicate = check => check.Name.Contains("Liveness"),
+                    ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
+                });
+                
+                endpoints.MapControllers();
+            });
         }
     }
 }

@@ -7,11 +7,14 @@ using System.Threading.Tasks;
 using Flurl;
 using Flurl.Http;
 using Funda.Assignment.Domain;
+using Microsoft.Extensions.Options;
 using Polly;
 
 namespace Funda.Assignment.Infrastructure.PropertyServices.FundaPartnerApi
 {
-    public class AanbodService : ISearchProperties
+    public class AanbodService : 
+        ISearchProperties,
+        ICheckPropertyServiceIsHealthy
     {
         private const int MaxRetryCount = 3;
         private const string DefaultSearchType = "koop"; //purchase
@@ -21,10 +24,10 @@ namespace Funda.Assignment.Infrastructure.PropertyServices.FundaPartnerApi
         private readonly ITranslateProperty<AanbodServiceResponse.ObjectResponse> _translator;
 
         public AanbodService(
-            Uri fundaPartnerApiUri,
+            IOptions<FundaPartnerApiSettings> options,
             ITranslateProperty<AanbodServiceResponse.ObjectResponse> translator)
         {
-            _fundaPartnerApiUri = fundaPartnerApiUri;
+            _fundaPartnerApiUri = new Uri($"{options.Value.ApiUrl}/{options.Value.ApiKey}");
             _translator = translator;
         }
 
@@ -67,6 +70,19 @@ namespace Funda.Assignment.Infrastructure.PropertyServices.FundaPartnerApi
                 });
 
             return properties.Select(property => _translator.Translate(property));
+        }
+
+        public async Task Ping()
+        {
+            await _fundaPartnerApiUri
+                .SetQueryParams(new
+                {
+                    type = DefaultSearchType,
+                    zo = "/amsterdam/",
+                    page = 0,
+                    pagesize = 1
+                })
+                .GetJsonAsync<AanbodServiceResponse>();
         }
 
         private static bool NeedsToBeRetried(FlurlHttpException ex)

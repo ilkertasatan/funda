@@ -11,4 +11,9 @@ namespace Funda.Assignment.Domain
             bool includeGarden,
             CancellationToken cancellationToken);
     }
+
+    public interface ICheckPropertyServiceIsHealthy
+    {
+        Task Ping();
+    }
 }
