@@ -4,9 +4,9 @@ namespace Funda.Assignment.Infrastructure.PropertyServices.FundaPartnerApi
 {
     public class AanbodServiceResponse
     {
-        public IList<Object> Objects { get; set; }
-        
-        public class Object
+        public IList<ObjectResponse> Objects { get; set; }
+
+        public class ObjectResponse
         {
             public int GlobalId { get; set; }
 
@@ -16,7 +16,7 @@ namespace Funda.Assignment.Infrastructure.PropertyServices.FundaPartnerApi
 
             public bool IsVerkochtOfVerhuurd { get; set; }
 
-            public int KoopprijsTot { get; set; }
+            public int? KoopprijsTot { get; set; }
 
             public string Adres { get; set; }
         
