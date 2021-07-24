@@ -14,6 +14,8 @@ namespace Funda.Assignment.Infrastructure.PropertyServices.FundaPartnerApi
     public class AanbodService : ISearchProperties
     {
         private const int MaxRetryCount = 3;
+        private const string DefaultSearchType = "koop"; //purchase
+        private const int DefaultPageSize = 50;
         
         private readonly Uri _fundaPartnerApiUri;
         private readonly ITranslateProperty<AanbodServiceResponse.ObjectResponse> _translator;
@@ -26,12 +28,8 @@ namespace Funda.Assignment.Infrastructure.PropertyServices.FundaPartnerApi
             _translator = translator;
         }
 
-        public async Task<IList<Property>> SearchAsync(
-            SearchType type,
-            string location,
+        public async Task<IEnumerable<Property>> SearchAsync(string location,
             bool includeGarden,
-            int page,
-            int pageSize,
             CancellationToken cancellationToken)
         {
             var properties = await Policy
@@ -42,23 +40,20 @@ namespace Funda.Assignment.Infrastructure.PropertyServices.FundaPartnerApi
                     AanbodServiceResponse response;
                     var objects = new List<AanbodServiceResponse.ObjectResponse>();
 
+                    var pageIndex = 0;
                     do
                     {
                        response = await _fundaPartnerApiUri
                             .SetQueryParams(new
                             {
-                                type = type switch
-                                {
-                                    SearchType.Purchase => "koop",
-                                    _ => "koop"
-                                },
+                                type = DefaultSearchType,
                                 zo = includeGarden switch
                                 {
                                     true => $"/{location}/tuin/",
                                     false => $"/{location}/"
                                 },
-                                page = page += 1,
-                                pagesize = pageSize
+                                page = pageIndex += 1,
+                                pagesize = DefaultPageSize
                             })
                             .WithTimeout(TimeSpan.FromSeconds(3))
                             .GetJsonAsync<AanbodServiceResponse>(cancellationToken);
@@ -70,7 +65,7 @@ namespace Funda.Assignment.Infrastructure.PropertyServices.FundaPartnerApi
                     return objects;
                 });
 
-            return properties.Select(@object => _translator.Translate(@object)).ToList();
+            return properties.Select(property => _translator.Translate(property));
         }
 
         private static bool NeedsToBeRetried(FlurlHttpException ex)

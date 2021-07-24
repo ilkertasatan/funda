@@ -11,8 +11,6 @@ namespace Funda.Assignment.Application.UseCases.EstateAgents.GetMostPropertiesFo
     public class EstateAgentsWithMostPropertiesQueryHandler :
         IRequestHandler<EstateAgentsWithMostPropertiesQuery, IQueryResult>
     {
-        private const int DefaultPage = 0;
-        private const int DefaultPageSize = 50;
         private const int DefaultLimit = 10;
         
         private readonly ISearchProperties _fundaPartnerApi;
@@ -27,12 +25,9 @@ namespace Funda.Assignment.Application.UseCases.EstateAgents.GetMostPropertiesFo
             CancellationToken cancellationToken)
         {
             var result = (await _fundaPartnerApi.SearchAsync(
-                    type: SearchType.Purchase,
                     location: request.Location.Value,
                     includeGarden: request.IncludeGarden,
-                    page: DefaultPage,
-                    pageSize: DefaultPageSize,
-                    cancellationToken))
+                    cancellationToken: cancellationToken))
                 .Where(p => !p.IsSold())
                 .GroupBy(p => (p.EstateAgent.Id, p.EstateAgent.Name), (ea, p) => EstateAgent.New(ea.Id, ea.Name, p))
                 .OrderByDescending(x => x.Properties.Count())

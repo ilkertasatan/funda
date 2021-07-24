@@ -6,12 +6,9 @@ namespace Funda.Assignment.Domain
 {
     public interface ISearchProperties
     {
-        Task<IList<Property>> SearchAsync(
-            SearchType type,
+        Task<IEnumerable<Property>> SearchAsync(
             string location,
-            bool includeGarden, 
-            int page,
-            int pageSize,
+            bool includeGarden,
             CancellationToken cancellationToken);
     }
 }
