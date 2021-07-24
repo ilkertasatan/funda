@@ -20,9 +20,7 @@ namespace Funda.Assignment.Infrastructure.PropertyServices.FundaPartnerApi
             public int? KoopprijsTot { get; set; }
 
             public string Adres { get; set; }
-        
-            public string Postcode { get; set; }
-        
+
             public int MakelaarId { get; set; }
 
             public string MakelaarNaam { get; set; }
