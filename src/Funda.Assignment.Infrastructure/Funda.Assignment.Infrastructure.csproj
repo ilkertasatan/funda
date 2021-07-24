@@ -6,19 +6,14 @@
 
     <ItemGroup>
         <PackageReference Include="Flurl" Version="3.0.2" />
-        <PackageReference Include="Flurl.Http" Version="3.0.2" />
+        <PackageReference Include="Flurl.Http" Version="3.2.0" />
         <PackageReference Include="Polly" Version="7.2.2" />
+        <PackageReference Include="Microsoft.Extensions.Options" Version="5.0.0" />
     </ItemGroup>
 
     <ItemGroup>
       <ProjectReference Include="..\Funda.Assignment.Application\Funda.Assignment.Application.csproj" />
       <ProjectReference Include="..\Funda.Assignment.Domain\Funda.Assignment.Domain.csproj" />
     </ItemGroup>
-
-    <ItemGroup>
-      <Reference Include="Microsoft.Extensions.Options, Version=5.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60">
-        <HintPath>C:\Program Files\dotnet\shared\Microsoft.AspNetCore.App\5.0.7\Microsoft.Extensions.Options.dll</HintPath>
-      </Reference>
-    </ItemGroup>
-
+    
 </Project>
