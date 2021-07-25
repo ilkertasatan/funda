@@ -36,36 +36,28 @@ namespace Funda.Assignment.Infrastructure.PropertyServices.FundaPartnerApi
             bool includeGarden,
             CancellationToken cancellationToken)
         {
-            var properties = await Policy
-                .Handle<FlurlHttpException>(NeedsToBeRetried)
-                .WaitAndRetryAsync(MaxRetryCount, retryAttempt => TimeSpan.FromSeconds(Math.Pow(2, retryAttempt)))
-                .ExecuteAsync(async () =>
-                {
-                    var response = await CallAanbodService(
-                        location,
-                        includeGarden,
-                        pageIndex: 0,
-                        pageSize: DefaultPageSize,
-                        cancellationToken);
-                    var pageCount = response.Paging.AantalPaginas;
+            var response = await CallAanbodService(
+                location,
+                includeGarden,
+                pageIndex: 0,
+                pageSize: DefaultPageSize,
+                cancellationToken);
+            var pageCount = response.Paging.AantalPaginas;
                     
-                    var allTasks = new List<Task<IEnumerable<AanbodServiceResponse.ObjectResponse>>>();
-                    for (var pageIndex = 1; pageIndex < pageCount; pageIndex++)
-                        allTasks.Add(AcquireObjectsAsync(
-                            location,
-                            includeGarden,
-                            pageIndex,
-                            cancellationToken));
+            var allTasks = new List<Task<IEnumerable<AanbodServiceResponse.ObjectResponse>>>();
+            for (var pageIndex = 1; pageIndex < pageCount; pageIndex++)
+                allTasks.Add(AcquireObjectsAsync(
+                    location,
+                    includeGarden,
+                    pageIndex,
+                    cancellationToken));
 
-                    var allResults = await Task.WhenAll(allTasks);
+            var allResults = await Task.WhenAll(allTasks);
 
-                    var objects = new List<AanbodServiceResponse.ObjectResponse>();
-                    objects.AddRange(allResults.SelectMany(task => task));
-                    
-                    return objects;
-                });
+            var objects = new List<AanbodServiceResponse.ObjectResponse>();
+            objects.AddRange(allResults.SelectMany(task => task));
 
-            return properties.Select(property => _translator.Translate(property));
+            return objects.Select(property => _translator.Translate(property));
         }
 
         public async Task PingAsync()
@@ -100,37 +92,41 @@ namespace Funda.Assignment.Infrastructure.PropertyServices.FundaPartnerApi
             int pageSize,
             CancellationToken cancellationToken)
         {
-            return await _fundaPartnerApiUri
-                .SetQueryParams(new
+            return await Policy
+                .Handle<FlurlHttpException>(NeedsToBeRetried)
+                .WaitAndRetryAsync(MaxRetryCount, retryAttempt => TimeSpan.FromSeconds(Math.Pow(2, retryAttempt)))
+                .ExecuteAsync(async () =>
                 {
-                    type = DefaultSearchType,
-                    zo = includeGarden switch
-                    {
-                        true => $"/{location}/tuin/",
-                        false => $"/{location}/"
-                    },
-                    page = pageIndex,
-                    pagesize = pageSize
-                })
-                .WithTimeout(TimeSpan.FromSeconds(3))
-                .GetJsonAsync<AanbodServiceResponse>(cancellationToken)
-                .ConfigureAwait(false);
+                    return await _fundaPartnerApiUri
+                        .SetQueryParams(new
+                        {
+                            type = DefaultSearchType,
+                            zo = includeGarden switch
+                            {
+                                true => $"/{location}/tuin/",
+                                false => $"/{location}/"
+                            },
+                            page = pageIndex,
+                            pagesize = pageSize
+                        })
+                        .WithTimeout(TimeSpan.FromSeconds(3))
+                        .GetJsonAsync<AanbodServiceResponse>(cancellationToken)
+                        .ConfigureAwait(false);
+                });
         }
 
         private static bool NeedsToBeRetried(FlurlHttpException ex)
         {
-            switch ((HttpStatusCode) ex.Call.Response.StatusCode)
+            return (HttpStatusCode) ex.Call.Response.StatusCode switch
             {
-                case HttpStatusCode.Unauthorized:
-                case HttpStatusCode.RequestTimeout:
-                case HttpStatusCode.InternalServerError:
-                case HttpStatusCode.BadGateway:
-                case HttpStatusCode.GatewayTimeout:
-                case HttpStatusCode.TooManyRequests:
-                    return true;
-                default:
-                    return false;
-            }
+                HttpStatusCode.Unauthorized => true,
+                HttpStatusCode.RequestTimeout => true,
+                HttpStatusCode.InternalServerError => true,
+                HttpStatusCode.BadGateway => true,
+                HttpStatusCode.GatewayTimeout => true,
+                HttpStatusCode.TooManyRequests => true,
+                _ => false
+            };
         }
     }
 }
